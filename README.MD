@@ -1,5 +1,13 @@
 # Instruções Gerais
 
+# Membros 
+Pietro Paranhos Wilhelm rm561378
+João Vitor Biribilli
+Pedro de Matos
+Gabriel Losano 
+Felipe Monte
+
+
 * Esta prova é **em grupo**. Consulta à documentação oficial é permitida; uso de IA generativa **não é permitido**.
 * Você recebeu **DOIS pacotes**:
 
