@@ -1,0 +1,15 @@
+{
+  "name": "api-bibliotech",
+  "version": "1.0.0",
+  "description": "API REST de biblioteca pessoal para a prova de React Native",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "swagger-ui-express": "^5.0.1"
+  }
+}

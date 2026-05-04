@@ -1,0 +1,222 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Bibliotech",
+    "version": "1.0.0",
+    "description": "API REST de biblioteca pessoal usada na prova de React Native. Permite cadastrar, listar, atualizar e remover livros."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local de desenvolvimento"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Books",
+      "description": "Operações sobre livros"
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "tags": ["Books"],
+        "summary": "Lista todos os livros",
+        "description": "Retorna todos os livros cadastrados. Pode receber o filtro opcional 'read' para trazer apenas lidos ou não lidos.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "read",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "required": false,
+            "description": "Se informado, filtra livros pelo status de leitura"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de livros",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Book" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Books"],
+        "summary": "Cadastra um novo livro",
+        "description": "Cria um livro. O ID é gerado automaticamente pelo servidor.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BookInput" },
+              "example": {
+                "title": "Dom Casmurro",
+                "author": "Machado de Assis",
+                "year": 1899,
+                "genre": "Romance",
+                "read": false,
+                "rating": 0
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Livro criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Book" }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "tags": ["Books"],
+        "summary": "Busca um livro pelo ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Livro encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Book" }
+              }
+            }
+          },
+          "404": {
+            "description": "Livro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Books"],
+        "summary": "Atualiza um livro existente",
+        "description": "Atualiza TODOS os campos do livro. Envie o objeto completo no body.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BookInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Livro atualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Book" }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Livro não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Books"],
+        "summary": "Remove um livro",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Livro removido com sucesso"
+          },
+          "404": {
+            "description": "Livro não encontrado"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id":     { "type": "integer", "example": 1 },
+          "title":  { "type": "string",  "example": "Clean Code" },
+          "author": { "type": "string",  "example": "Robert C. Martin" },
+          "year":   { "type": "integer", "example": 2008 },
+          "genre":  { "type": "string",  "example": "Tecnologia" },
+          "read":   { "type": "boolean", "example": true },
+          "rating": { "type": "integer", "example": 5, "minimum": 0, "maximum": 5 }
+        }
+      },
+      "BookInput": {
+        "type": "object",
+        "required": ["title", "author", "year", "genre"],
+        "properties": {
+          "title":  { "type": "string",  "minLength": 2, "example": "Dom Casmurro" },
+          "author": { "type": "string",  "minLength": 2, "example": "Machado de Assis" },
+          "year":   { "type": "integer", "minimum": 1000, "example": 1899 },
+          "genre":  { "type": "string",  "example": "Romance" },
+          "read":   { "type": "boolean", "example": false },
+          "rating": { "type": "integer", "minimum": 0, "maximum": 5, "example": 0 }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "example": "O campo 'title' é obrigatório e deve ter ao menos 2 caracteres." }
+        }
+      }
+    }
+  }
+}
