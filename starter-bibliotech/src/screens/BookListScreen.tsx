@@ -41,15 +41,11 @@ export function BookListScreen({ navigation }: Props) {
   // useEffect: ao montar a tela, busca o filtro que estava salvo da última vez
   // ------------------------------------------------------------------------
   useEffect(() => {
-    // TODO: chame loadFilter() (do arquivo storage/preferences.ts) e
-    //       atualize o estado `filter` com o resultado.
-    //       Como loadFilter é assíncrono, você precisa de uma função interna:
-    //
-    //   async function carregarFiltroSalvo() {
-    //     const salvo = await loadFilter();
-    //     setFilter(salvo);
-    //   }
-    //   carregarFiltroSalvo();
+    async function carregarFiltroSalvo() {
+      const salvo = await loadFilter();
+      setFilter(salvo);
+    }
+    carregarFiltroSalvo();
   }, []);
 
   // ------------------------------------------------------------------------
@@ -57,18 +53,19 @@ export function BookListScreen({ navigation }: Props) {
   // ------------------------------------------------------------------------
   async function handleChangeFilter(novoFiltro: BookFilter) {
     setFilter(novoFiltro);
-    // TODO: persistir o novoFiltro no AsyncStorage usando saveFilter().
+    await saveFilter(novoFiltro);
   }
 
   // ------------------------------------------------------------------------
   // Aplica o filtro na lista vinda do Context.
   // ------------------------------------------------------------------------
-  // TODO: implemente a função para retornar a lista FILTRADA conforme `filter`:
-  //   - "all"    : devolve `books` inteiro
-  //   - "read"   : só os livros com book.read === true
-  //   - "unread" : só os livros com book.read === false
-  // Por enquanto está retornando tudo (substitua a lógica abaixo).
-  const livrosFiltrados: Book[] = books;
+  // Aplica o filtro na lista de livros
+  const livrosFiltrados: Book[] =
+    filter === "all"
+      ? books
+      : filter === "read"
+      ? books.filter((b) => b.read === true)
+      : books.filter((b) => b.read === false);
 
   // ------------------------------------------------------------------------
   // Confirmação antes de excluir
