@@ -72,29 +72,39 @@ export function BookFormScreen({ route, navigation }: Props) {
    */
   function validar(): FormErrors {
     const novosErros: FormErrors = {};
-
-    // TODO: implemente as regras de validação abaixo.
-    //
-    // REGRAS:
-    //   title  : obrigatório, mínimo 2 caracteres
-    //   author : obrigatório, mínimo 2 caracteres
-    //   year   : obrigatório, número entre 1000 e o ano atual
-    //   genre  : obrigatório
-    //   rating : número entre 0 e 5
-    //
-    // EXEMPLO de como atribuir um erro:
-    //   if (!title.trim()) {
-    //     novosErros.title = "Título é obrigatório";
-    //   } else if (title.trim().length < 2) {
-    //     novosErros.title = "Título deve ter ao menos 2 caracteres";
-    //   }
-    //
-    // DICAS:
-    //   - Use .trim() para ignorar espaços em branco no começo/fim
-    //   - Para converter string em número: Number(year) ou parseInt(year, 10)
-    //   - Number("abc") devolve NaN. Verifique com isNaN(numero).
-    //   - Ano atual: new Date().getFullYear()
-
+    const anoAtual = new Date().getFullYear();
+    // title
+    if (!title.trim()) {
+      novosErros.title = "Título é obrigatório";
+    } else if (title.trim().length < 2) {
+      novosErros.title = "Título deve ter ao menos 2 caracteres";
+    }
+    // author
+    if (!author.trim()) {
+      novosErros.author = "Autor é obrigatório";
+    } else if (author.trim().length < 2) {
+      novosErros.author = "Autor deve ter ao menos 2 caracteres";
+    }
+    // year
+    const yearNum = Number(year);
+    if (!year.trim()) {
+      novosErros.year = "Ano é obrigatório";
+    } else if (isNaN(yearNum)) {
+      novosErros.year = "Ano deve ser um número válido";
+    } else if (yearNum < 1000 || yearNum > anoAtual) {
+      novosErros.year = `Ano deve estar entre 1000 e ${anoAtual}`;
+    }
+    // genre
+    if (!genre.trim()) {
+      novosErros.genre = "Gênero é obrigatório";
+    }
+    // rating
+    const ratingNum = Number(rating);
+    if (isNaN(ratingNum)) {
+      novosErros.rating = "Nota deve ser um número";
+    } else if (ratingNum < 0 || ratingNum > 5) {
+      novosErros.rating = "Nota deve estar entre 0 e 5";
+    }
     return novosErros;
   }
 
@@ -124,16 +134,12 @@ export function BookFormScreen({ route, navigation }: Props) {
     // 3) envia para a API através do Context
     setSubmitting(true);
     try {
-      // TODO:
-      //   - Se está em modo de edição (isEdicao === true):
-      //       chame editBook(livroExistente.id, input)
-      //   - Caso contrário:
-      //       chame addBook(input)
-      //
-      //   Depois, navegue de volta para a lista com:
-      //       navigation.goBack();
-
-      Alert.alert("Atenção", "handleSubmit() ainda não foi implementada.");
+      if (isEdicao && livroExistente) {
+        await editBook(livroExistente.id, input);
+      } else {
+        await addBook(input);
+      }
+      navigation.goBack();
     } catch (e) {
       // Se a API recusar (ex: erro 400), mostra um alerta.
       Alert.alert("Erro", "Não foi possível salvar o livro. Tente novamente.");
