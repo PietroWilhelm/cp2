@@ -1,11 +1,16 @@
 # Instruções Gerais
 
 # Membros 
+
 Pietro Paranhos Wilhelm rm561378
-João Vitor Biribilli
-Pedro de Matos
-Gabriel Losano 
-Felipe Monte
+
+João Vitor Biribilli rm565594
+
+Pedro de Matos rm
+
+Gabriel Losano rm
+
+Felipe Monte rm
 
 
 * Esta prova é **em grupo**. Consulta à documentação oficial é permitida; uso de IA generativa **não é permitido**.
